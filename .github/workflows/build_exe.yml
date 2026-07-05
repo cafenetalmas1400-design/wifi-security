@@ -1,0 +1,33 @@
+name: Build EXE
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        pip install customtkinter Pillow pyinstaller
+    
+    - name: Build EXE
+      run: |
+        pyinstaller --onefile --name WiFi_Security_Analyzer --icon=app.ico --noconfirm wifi_security_tool.py
+    
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: WiFi_Security_Analyzer
+        path: dist/WiFi_Security_Analyzer.exe
